@@ -1,35 +1,59 @@
-import { Suspense, useState } from "react";
+import { Suspense, useState, useEffect } from "react";
 import { OrbitControls } from "@react-three/drei";
 import { ARCanvas, ARMarker } from "@artcom/react-three-arjs";
-import { usePinch } from "@use-gesture/react";
+import { usePinch, useGesture } from "@use-gesture/react";
 
 import "./styles.css";
 import Model from "./components/Model";
+import VConsole from 'vconsole';
 
 const App = () => {
   const [play, setPlay] = useState(false);
   const [marker, setMarker] = useState(false);
-  const [scale, setScale] = useState([1, 1, 1]);
+  const [scale, setScale] = useState([0, 0, 0]);
   const [newAngle, setNewAngle] = useState([-90, 0, 0]);
+  const [position, setPosition] = useState([0, 2, 0]);
   const [dist, setDist] = useState(0);
 
   document.addEventListener("gesturestart", (e) => e.preventDefault());
   document.addEventListener("gesturechange", (e) => e.preventDefault());
 
-  const bind = usePinch(({ offset: [scale, angle], da: [d, a] }) => {
-    setScale([scale, scale, scale]);
-    let angleThreshold = Math.abs(
-      (newAngle[1] / 0.1 - angle) / (newAngle[1] / 0.1)
-    );
-    let distThreshold = Math.abs((dist - d) / d);
-    console.log(angleThreshold);
-    if (angleThreshold > 0.05 && distThreshold < 0.07) {
-      setNewAngle([-90, angle * 0.1, 0]);
+  // const bind = usePinch(({ offset: [scale, angle], da: [d, a] }) => {
+  //   setScale([scale, scale, scale]);
+  //   let angleThreshold = Math.abs(
+  //     (newAngle[1] / 0.1 - angle) / (newAngle[1] / 0.1)
+  //   );
+  //   let distThreshold = Math.abs((dist - d) / d);
+  //   console.log(angleThreshold);
+  //   if (angleThreshold > 0.05 && distThreshold < 0.07) {
+  //     setNewAngle([-90, angle * 0.1, 0]);
+  //   }
+  //   if (distThreshold >= 0.1) {
+  //     setDist(d);
+  //   }
+  // });
+  const bind = useGesture({
+    onPinch: ({ offset: [scale, angle], da: [d, a] }) => {
+      console.log('scale', scale, 'angle', angle, 'd', d, 'a', a);
+      setScale([scale, scale, scale]);
+      let angleThreshold = Math.abs(
+        (newAngle[1] / 0.1 - angle) / (newAngle[1] / 0.1)
+      );
+      let distThreshold = Math.abs((dist - d) / d);
+      console.log(angleThreshold);
+      if (angleThreshold > 0.05 && distThreshold < 0.07) {
+        setNewAngle([-90, angle * 0.1, 0]);
+      }
+      if (distThreshold >= 0.1) {
+        setDist(d);
+      }
+    },
+    // 拖拽
+    onDrag: ({ offset: [x, y] }) => {
+      console.log('x, y', x, y);
+      setPosition([x, y, 0]);
     }
-    if (distThreshold >= 0.1) {
-      setDist(d);
-    }
-  });
+  })
 
   function handlePlayButton() {
     let setDisplay = !play;
@@ -61,7 +85,12 @@ const App = () => {
     }, 600);
   }
 
-  function handleVideoStreamError() {}
+  function handleVideoStreamError() { }
+
+
+  useEffect(()=>{
+    const vConsole = new VConsole({ theme: 'dark' });
+  }, [])
 
   return (
     <>
@@ -70,11 +99,11 @@ const App = () => {
         style={
           play
             ? {
-                background: "transparent",
-                transition: "background 0.8s ease-in",
-                transitionDelay: "0.8s",
-              }
-            : { background: "#ff6b6b" }
+              background: "transparent",
+              transition: "background 0.8s ease-in",
+              transitionDelay: "0.8s",
+            }
+            : { background: "#e4c970" }
         }
       >
         {play ? (
@@ -108,7 +137,7 @@ const App = () => {
                 <Suspense fallback={null}>
                   <Model
                     rotation={newAngle}
-                    position={[0, 2, 0]}
+                    position={position}
                     scale={scale}
                     marker={marker}
                   />
@@ -119,11 +148,10 @@ const App = () => {
           </>
         ) : (
           <div className="playScreen">
-            <h1>Start experience</h1>
 
-            <button onClick={handlePlayButton}>Play!</button>
+            <button onClick={handlePlayButton}>开始</button>
             <p style={{ color: "white", textAlign: "center" }}>
-                如果遇到视频定位错误,
+              如果遇到视频定位错误,
               <br />
               转动手机方向或调整浏览器窗口大小
             </p>

@@ -11,7 +11,7 @@ body {
 .container {
   height: 100vh;
   width: 100vw;
-  background: #ff6b6b;
+  background-color: #e4c970;
 
   z-index: 2;
   position: relative;
@@ -22,14 +22,14 @@ body {
 
 }
 
-.container h1 {
+/* .container h1 {
   font-size: 3rem;
   font-weight: 900;
   color: white;
   text-shadow: 2px 2px black;
   margin: 0;
  
-}
+} */
 
 .playScreen {
   display: flex;
@@ -45,10 +45,11 @@ body {
   border: none;
   height: 40px;
   border-radius: 10px;
-  background: #1a535c;
+  background: #c5b629;
   color: white;
   font-size: 1.5rem;
   font-weight: 700;
+  text-shadow: 2px 2px black;
 }
 
 .AR {
@@ -85,12 +86,12 @@ body {
 }
 
 @media (max-width: 765px) {
-  .container h1 {
+  /* .container h1 {
     font-size: 2rem;
     font-weight: 900;
     color: white;
     text-shadow: 2px 2px black;
-  }
+  } */
 
   .playScreen {
     display: flex;
@@ -103,10 +104,11 @@ body {
     border: none;
     height: 50px;
     border-radius: 8px;
-    background: #1a535c;
+    background: #c5b629;
     color: white;
     font-size: 1.175rem;
     font-weight: 700;
+    text-shadow: 2px 2px black;
   }
 
   .footer {
