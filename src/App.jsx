@@ -10,9 +10,9 @@ import VConsole from 'vconsole';
 const App = () => {
   const [play, setPlay] = useState(false);
   const [marker, setMarker] = useState(false);
-  const [scale, setScale] = useState([0, 0, 0]);
+  const [scale, setScale] = useState([1, 1, 1]);
   const [newAngle, setNewAngle] = useState([-90, 0, 0]);
-  const [position, setPosition] = useState([0, 2, 0]);
+  const [position, setPosition] = useState([0, 0, 0]);
   const [dist, setDist] = useState(0);
 
   document.addEventListener("gesturestart", (e) => e.preventDefault());
@@ -33,24 +33,14 @@ const App = () => {
   //   }
   // });
   const bind = useGesture({
-    onPinch: ({ offset: [scale, angle], da: [d, a] }) => {
-      console.log('scale', scale, 'angle', angle, 'd', d, 'a', a);
-      setScale([scale, scale, scale]);
-      let angleThreshold = Math.abs(
-        (newAngle[1] / 0.1 - angle) / (newAngle[1] / 0.1)
-      );
-      let distThreshold = Math.abs((dist - d) / d);
-      console.log(angleThreshold);
-      if (angleThreshold > 0.05 && distThreshold < 0.07) {
-        setNewAngle([-90, angle * 0.1, 0]);
-      }
-      if (distThreshold >= 0.1) {
-        setDist(d);
-      }
-    },
-    // 拖拽
+    // onPinch: ({ offset: [scale, angle], da: [d, a] }) => {
+    //   console.log('scale', scale, 'angle', angle, 'd', d, 'a', a);
+    //   setScale([scale, scale, scale]);
+    //   // setNewAngle([-90, angle * 0.1, 0]);
+    // },
+    // // 拖拽
     onDrag: ({ offset: [x, y] }) => {
-      console.log('x, y', x, y);
+      console.log('x', x, 'y', y);
       setPosition([x, y, 0]);
     }
   })
@@ -163,13 +153,17 @@ const App = () => {
           <span>Li Ming</span>
         </p> */}
       </div>
-      {!marker ? (
+      {!marker && (
         <div className="scanMarkerImg">
           <img src="./ScanMarkerInst.png" />
         </div>
-      ) : (
-        <></>
       )}
+      {marker && (<button className="resetBtn" onClick={()=>{
+        console.log(1);
+        setNewAngle([-90, 0, 0]);
+        setScale([1, 1, 1]);
+        setPosition([0, 0, 0]);
+      }}>重置</button>)}
     </>
   );
 };

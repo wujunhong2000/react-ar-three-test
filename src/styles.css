@@ -125,4 +125,9 @@ body {
   .scanMarkerImg img {
     width: 50%;
   }
+  .resetBtn{
+    position: absolute;
+    top: 10px;
+    z-index: 999;
+  }
 }

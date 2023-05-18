@@ -113,7 +113,7 @@ export default function Model(props) {
     // </group>
 
       <group ref={group} {...props} dispose={null}>
-        <group rotation={[-Math.PI / 2, 0, 0]} scale={0.1}>
+        <group rotation={[-Math.PI / 2, 0, 0]} scale={0.001}>
         <group position={[0, 0, 0]}>
           <mesh geometry={nodes.Object_3.geometry} material={materials['15___Default']} />
           <mesh geometry={nodes.Object_4.geometry} material={materials['02___Default']} />
